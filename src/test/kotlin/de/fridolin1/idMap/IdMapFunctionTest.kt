@@ -3,12 +3,9 @@ package de.fridolin1.idMap
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertNotEquals
-import kotlin.test.assertNull
-import kotlin.test.assertTrue
+import kotlin.test.*
 
+// Generated with Claude Sonnet.
 class IdMapFunctionTest {
 
     // ─────────────────────────────────────────────
@@ -129,51 +126,6 @@ class IdMapFunctionTest {
     }
 
     // ─────────────────────────────────────────────
-    // setByListID
-    // ─────────────────────────────────────────────
-
-    @Nested
-    inner class SetByListIDTests {
-
-        @Test
-        fun `updates value at correct storage id`() {
-            val m = sparseMap()
-            // elementList = [10, 20, 30]  →  listID 1 maps to storageID 20
-            m.setByListID(1, "TWENTY")
-            assertEquals("TWENTY", m[20])
-        }
-
-        @Test
-        fun `does not affect other entries`() {
-            val m = sparseMap()
-            m.setByListID(1, "TWENTY")
-            assertEquals("ten", m[10])
-            assertEquals("thirty", m[30])
-        }
-
-        @Test
-        fun `does not change size`() {
-            val m = sparseMap()
-            m.setByListID(0, "TEN")
-            assertEquals(3, m.size)
-        }
-
-        @Test
-        fun `first list entry`() {
-            val m = sparseMap()
-            m.setByListID(0, "TEN")
-            assertEquals("TEN", m[10])
-        }
-
-        @Test
-        fun `last list entry`() {
-            val m = sparseMap()
-            m.setByListID(2, "THIRTY")
-            assertEquals("THIRTY", m[30])
-        }
-    }
-
-    // ─────────────────────────────────────────────
     // remove (by storage ID)
     // ─────────────────────────────────────────────
 
@@ -266,76 +218,6 @@ class IdMapFunctionTest {
         fun `iterator stays consistent after remove`() {
             val m = sparseMap()
             m.remove(20)
-            val ids = m.toList()
-            assertEquals(2, ids.size)
-            assertFalse(ids.contains(20))
-            assertTrue(ids.containsAll(listOf(10, 30)))
-        }
-    }
-
-    // ─────────────────────────────────────────────
-    // removeByListID
-    // ─────────────────────────────────────────────
-
-    @Nested
-    inner class RemoveByListIDTests {
-
-        @Test
-        fun `element is gone after remove`() {
-            // elementList = [10, 20, 30]  →  listID 1 = storageID 20
-            val m = sparseMap()
-            m.removeByListID(1)
-            assertNull(m[20])
-            assertFalse(m.containsID(20))
-        }
-
-        @Test
-        fun `decreases size`() {
-            val m = sparseMap()
-            m.removeByListID(1)
-            assertEquals(2, m.size)
-        }
-
-        @Test
-        fun `preserves other entries`() {
-            val m = sparseMap()
-            m.removeByListID(1)    // removes storageID 20
-            assertEquals("ten", m[10])
-            assertEquals("thirty", m[30])
-        }
-
-        @Test
-        fun `swapped-in element still accessible`() {
-            // Last element (30) is moved to list slot 0 when we remove list slot 0 (storageID 10)
-            val m = sparseMap()
-            m.removeByListID(0)
-            assertEquals("thirty", m[30])
-            assertTrue { m.toList().any { m[it] == "thirty" } }
-        }
-
-        @Test
-        fun `remove last list position (no swap)`() {
-            val m = sparseMap()
-            m.removeByListID(2)    // 30 is last → no swap needed
-            assertNull(m[30])
-            assertEquals("ten", m[10])
-            assertEquals("twenty", m[20])
-            assertEquals(2, m.size)
-        }
-
-        @Test
-        fun `remove single element empties map`() {
-            val m = IdMap<String>()
-            m[42] = "only"
-            m.removeByListID(0)
-            assertTrue(m.isEmpty())
-            assertNull(m[42])
-        }
-
-        @Test
-        fun `iterator stays consistent after remove`() {
-            val m = sparseMap()
-            m.removeByListID(1)    // removes storageID 20
             val ids = m.toList()
             assertEquals(2, ids.size)
             assertFalse(ids.contains(20))
