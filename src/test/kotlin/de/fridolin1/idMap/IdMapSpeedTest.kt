@@ -9,7 +9,7 @@ class IdMapSpeedTest {
     fun speedTest() {
         var sum1 = 0L
         var sum2 = 0L
-        repeat(128) {
+        repeat(1.shl(12)) {
             sum1 += measureIDMap()
             sum2 += measureHashMap()
         }
