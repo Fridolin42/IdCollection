@@ -1,4 +1,4 @@
-package de.fridolin1.idMap
+package de.fridolin1.idCollection
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -6,14 +6,14 @@ import org.junit.jupiter.api.Test
 import kotlin.test.*
 
 // Generated with Claude Sonnet.
-class IdMapFunctionTest {
+class IDMapFunctionTest {
 
     // ─────────────────────────────────────────────
     // Helpers
     // ─────────────────────────────────────────────
 
     /** Builds a small, non-sequential map: storageIDs 10, 20, 30 → "ten", "twenty", "thirty" */
-    private fun sparseMap(): IdMap<String> = IdMap<String>().apply {
+    private fun sparseMap(): IDMap<String> = IDMap<String>().apply {
         set(10, "ten")
         set(20, "twenty")
         set(30, "thirty")
@@ -25,18 +25,18 @@ class IdMapFunctionTest {
 
     @Nested
     inner class SizeTests {
-        private lateinit var idMap: IdMap<String>
+        private lateinit var idMap: IDMap<String>
 
         @BeforeEach
         fun setUp() {
-            idMap = IdMap<String>().apply { repeat(1.shl(15)) { set(it, "$it :)") } }
+            idMap = IDMap<String>().apply { repeat(1.shl(15)) { set(it, "$it :)") } }
         }
 
         @Test
         fun `initial population`() = assertEquals(1.shl(15), idMap.size)
 
         @Test
-        fun `empty map`() = assertEquals(0, IdMap<String>().size)
+        fun `empty map`() = assertEquals(0, IDMap<String>().size)
 
         @Test
         fun `increases on new insert`() {
@@ -68,20 +68,20 @@ class IdMapFunctionTest {
 
         @Test
         fun `basic insert and retrieve`() {
-            val m = IdMap<String>()
+            val m = IDMap<String>()
             m[7] = "hello"
             assertEquals("hello", m[7])
         }
 
         @Test
-        fun `get returns null for unknown id`() = assertNull(IdMap<String>()[42])
+        fun `get returns null for unknown id`() = assertNull(IDMap<String>()[42])
 
         @Test
-        fun `get returns null for id beyond storage`() = assertNull(IdMap<String>()[999])
+        fun `get returns null for id beyond storage`() = assertNull(IDMap<String>()[999])
 
         @Test
         fun `overwrite updates value`() {
-            val m = IdMap<String>()
+            val m = IDMap<String>()
             m[5] = "first"
             m[5] = "second"
             assertEquals("second", m[5])
@@ -98,7 +98,7 @@ class IdMapFunctionTest {
 
         @Test
         fun `sparse ids work correctly`() {
-            val m = IdMap<Int>()
+            val m = IDMap<Int>()
             m[0] = 0
             m[500] = 500
             m[10_000] = 10_000
@@ -110,14 +110,14 @@ class IdMapFunctionTest {
 
         @Test
         fun `storage expands for id larger than initial capacity`() {
-            val m = IdMap<String>(4) // very small capacity
+            val m = IDMap<String>(4) // very small capacity
             m[1000] = "big"
             assertEquals("big", m[1000])
         }
 
         @Test
         fun `previously stored entries survive storage expansion`() {
-            val m = IdMap<String>(4)
+            val m = IDMap<String>(4)
             m[0] = "zero"
             m[1000] = "big"        // triggers expansion
             assertEquals("zero", m[0])
@@ -175,7 +175,7 @@ class IdMapFunctionTest {
 
         @Test
         fun `remove single element empties map`() {
-            val m = IdMap<String>()
+            val m = IDMap<String>()
             m[42] = "only"
             m.remove(42)
             assertTrue(m.isEmpty())
@@ -191,7 +191,7 @@ class IdMapFunctionTest {
 
         @Test
         fun `remove id beyond storage does nothing`() {
-            val m = IdMap<String>(4)
+            val m = IDMap<String>(4)
             m[0] = "zero"
             m.remove(999)          // way beyond current storage
             assertEquals(1, m.size)
@@ -207,7 +207,7 @@ class IdMapFunctionTest {
 
         @Test
         fun `remove all elements one by one`() {
-            val m = IdMap<Int>()
+            val m = IDMap<Int>()
             repeat(10) { m[it] = it }
             repeat(10) { m.remove(it) }
             assertEquals(0, m.size)
@@ -246,7 +246,7 @@ class IdMapFunctionTest {
         fun `false for never-set id`() = assertFalse(sparseMap().containsID(999))
 
         @Test
-        fun `false for id beyond storage`() = assertFalse(IdMap<String>().containsID(999))
+        fun `false for id beyond storage`() = assertFalse(IDMap<String>().containsID(999))
 
         @Test
         fun `true for all inserted ids`() {
@@ -294,14 +294,14 @@ class IdMapFunctionTest {
     inner class IsEmptyTests {
 
         @Test
-        fun `true on fresh map`() = assertTrue(IdMap<String>().isEmpty())
+        fun `true on fresh map`() = assertTrue(IDMap<String>().isEmpty())
 
         @Test
         fun `false after insert`() = assertFalse(sparseMap().isEmpty())
 
         @Test
         fun `true after removing only element`() {
-            val m = IdMap<String>()
+            val m = IDMap<String>()
             m[1] = "a"
             m.remove(1)
             assertTrue(m.isEmpty())
@@ -331,7 +331,7 @@ class IdMapFunctionTest {
         }
 
         @Test
-        fun `empty on fresh map`() = assertEquals(0, IdMap<String>().toList().size)
+        fun `empty on fresh map`() = assertEquals(0, IDMap<String>().toList().size)
 
         @Test
         fun `count matches size`() {

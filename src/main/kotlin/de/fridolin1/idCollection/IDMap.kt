@@ -1,6 +1,7 @@
-package de.fridolin1.idMap
+package de.fridolin1.idCollection
 
-class IdMap<T>(initialCapacity: Int = 64) : Iterable<Int> {
+/** A fast map that with an Int-key */
+class IDMap<T>(initialCapacity: Int = 64) : Iterable<Int> {
     /** The actual stored elements */
     @Suppress("UNCHECKED_CAST")
     private var storage = arrayOfNulls<Any>(initialCapacity) as Array<T?>
@@ -27,6 +28,7 @@ class IdMap<T>(initialCapacity: Int = 64) : Iterable<Int> {
             storage[id] = value
     }
 
+    /** Remove the element saved under this id */
     fun remove(id: Int) {
         if (id >= storage.size) return
         if (storage[id] == null) return
@@ -40,6 +42,7 @@ class IdMap<T>(initialCapacity: Int = 64) : Iterable<Int> {
         size--
     }
 
+    /** Get the element saved under this id */
     operator fun get(id: Int): T? = if (id < storage.size) storage[id] else null
 
     private fun expandStorage(minStorageSize: Int) {
@@ -52,10 +55,12 @@ class IdMap<T>(initialCapacity: Int = 64) : Iterable<Int> {
         elementList = elementList.copyOf(newSize)
     }
 
+    /** Check whether an object exists und this id */
     fun containsID(id: Int): Boolean = id < storage.size && storage[id] != null
 
     fun isEmpty(): Boolean = size == 0
 
+    /** Iterates through all elements and check is saved  */
     fun contains(element: T): Boolean {
         for (i in 0 until size)
             if (storage[elementList[i]] == element) return true

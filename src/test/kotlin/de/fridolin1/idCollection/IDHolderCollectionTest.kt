@@ -5,7 +5,7 @@
  *
  * Test framework: kotlin.test (works on JVM via JUnit and on all other KMP targets without changes).
  */
-package de.fridolin1.idMap
+package de.fridolin1.idCollection
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -16,29 +16,30 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 /**
- * Minimal concrete [DynamicID] used as the element type under test.
+ * Minimal concrete [MultiIDHolder] used as the element type under test.
  *
- * [DynamicIdCollection] relies on reference identity for [DynamicID.dynamicIDs],
+ * [IDHolderCollection] relies on reference identity for [MultiIDHolder.dynamicIDs],
  * so a plain data holder with a readable [label] is enough to write expressive assertions.
  */
-private class TestDynamicElement(name: String) : DynamicID() {
+private class TestDynamicElement(name: String) : MultiIDHolder() {
     val label = name
     override fun toString(): String = "TestDynamicElement($label)"
 }
 
 /**
- * General, contract-level tests for [DynamicIdCollection] as an implementation of [MutableCollection].
+ * General, contract-level tests for [IDHolderCollection] as an implementation of [MutableCollection].
  *
  * The tests are written against the behavior a [MutableCollection] is expected to provide
  * (as documented for [MutableCollection] / [Collection]), not against incidental implementation
  * details such as internal array layout or iteration order. Where a test depends on a specific
- * implementation detail of [DynamicIdCollection] (e.g. swap-removal via the last element), this is
+ * implementation detail of [IDHolderCollection] (e.g. swap-removal via the last element), this is
  * called out in a comment.
  */
-class DynamicIdCollectionTest {
+@Suppress("DEPRECATION")
+class IDHolderCollectionTest {
 
-    private fun newCollection(initialCapacity: Int = 64): DynamicIdCollection<TestDynamicElement> =
-        DynamicIdCollection(initialCapacity)
+    private fun newCollection(initialCapacity: Int = 64): IDHolderCollection<TestDynamicElement> =
+        IDHolderCollection(initialCapacity)
 
     private fun elementsNamed(vararg names: String): List<TestDynamicElement> =
         names.map { TestDynamicElement(it) }

@@ -1,11 +1,11 @@
-package de.fridolin1.idMap
+package de.fridolin1.idCollection
 
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class IdMapSpeedTest {
+class IDMapSpeedTest {
     @Nested
     inner class FillChangeAndEmptySpeedTest {
         @Test
@@ -22,7 +22,7 @@ class IdMapSpeedTest {
 
         fun measureIDMapFillChangeAndEmpty(): Long {
             val start1 = System.nanoTime()
-            val idMap = IdMap<String>(1.shl(15))
+            val idMap = IDMap<String>(1.shl(15))
             repeat(1.shl(15)) {
                 idMap[it] = "Hello World $it"
             }
@@ -71,7 +71,7 @@ class IdMapSpeedTest {
 
         fun measureIDMapFillAndEmpty(): Long {
             val start1 = System.nanoTime()
-            val idMap = IdMap<String>(1.shl(15))
+            val idMap = IDMap<String>(1.shl(15))
             repeat(1.shl(15)) {
                 idMap[it] = "Hello World $it"
             }
