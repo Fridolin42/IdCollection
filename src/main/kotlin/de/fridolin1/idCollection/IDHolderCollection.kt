@@ -19,6 +19,11 @@ class IDHolderCollection<T : MultiIDHolder>(initialCapacity: Int = 64) : Mutable
     override var size = 0
         private set
 
+    fun get(id: Int): T {
+        if (id !in indices) throw IndexOutOfBoundsException("Index $id not in range [0, $size)")
+        return elements[id] as T
+    }
+
     override fun isEmpty(): Boolean = size == 0
 
     /** Check if the collection contains the element */
